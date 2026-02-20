@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Probability Autobiography</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        textarea { width: 100%; height: 150px; }
+        .box { margin-top: 20px; padding: 15px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<h2>Probability Autobiography</h2>
+
+<input id="name" placeholder="Name"><br><br>
+<input id="age" type="number" placeholder="Age"><br><br>
+<input id="education" placeholder="Education"><br><br>
+<input id="career" placeholder="Career"><br><br>
+<input id="risk" type="number" step="0.1" placeholder="Risk (0–1)"><br><br>
+
+<button onclick="submitData()">Generate</button>
+
+<div class="box">
+    <h3>Autobiography</h3>
+    <pre id="result"></pre>
+</div>
+
+<script>
+function submitData() {
+    fetch("/api/profile/create/", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            name: document.getElementById("name").value,
+            age: document.getElementById("age").value,
+            education: document.getElementById("education").value,
+            career: document.getElementById("career").value,
+            risk: document.getElementById("risk").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("result").innerText = data.autobiography;
+        drawChart(data.success_probability);
+    });
+}
+</script>
+
+<canvas id="chart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+function drawChart(value) {
+    new Chart(document.getElementById("chart"), {
+        type: "bar",
+        data: {
+            labels: ["Success Probability"],
+            datasets: [{
+                label: "%",
+                data: [value],
+            }]
+        }
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Probability Autobiography</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.card {
+  background: rgba(255,255,255,0.15);
+  padding: 30px;
+  border-radius: 15px;
+  width: 350px;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  background: #00ffd5;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(30px);}
+  to {opacity:1; transform: translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>🌱Probability Autobiography</h2>
+<input type="text" id="name" placeholder="Name">
+<input type="number" id="age" placeholder="Age">
+<input type="text" id="profession" placeholder="Profession">
+<button onclick="calculate()">Calculate</button>
+<p id="result"></p>
+<canvas id="chart" width="300" height="300"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="form.js"></script>
+</div>
+
+<script>
+async function submitData() {
+  const res = await fetch("http://127.0.0.1:8000/api/profile/create/", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name: name.value,
+      age: age.value,
+      profession: profession.value
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("result").innerHTML =
+    `🎯 Success Probability: <b>${data.life_success_probability}</b>`;
+
+  showChart(parseInt(data.life_success_probability));
+}
+
+function showChart(value) {
+  new Chart(document.getElementById("chart"), {
+    type: "doughnut",
+    data: {
+      labels: ["Success", "Remaining"],
+      datasets: [{
+        data: [value, 100 - value],
+      }]
+    }
+  });
+}
+</script>
+
+</body>
+</html>
