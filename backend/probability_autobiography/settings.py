@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'life_profile',
+    'life_profile.apps.LifeProfileConfig',
 ]
 
 
